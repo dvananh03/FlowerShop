@@ -17,6 +17,8 @@ test.describe('Kiểm thử chức năng Đăng nhập trên Mobile Web (16 Test
     // Không hiển thị bất kỳ thông báo lỗi validation nào
     await expect(page.getByText('Vui lòng nhập email')).not.toBeVisible();
     await expect(page.getByText('Vui lòng nhập mật khẩu')).not.toBeVisible();
+    // Hiển thị thông báo đăng nhập thành công
+    await expect(page.getByText('Đăng nhập thành công')).toBeVisible();
   });
 
   // -------------------------------------------------------------
@@ -101,6 +103,7 @@ test.describe('Kiểm thử chức năng Đăng nhập trên Mobile Web (16 Test
     await page.getByRole('button', { name: 'Đăng nhập' }).click();
     await expect(page.getByText('Vui lòng nhập email')).not.toBeVisible();
     await expect(page.getByText('Mật khẩu phải có tối thiểu 8 ký tự')).not.toBeVisible();
+    await expect(page.getByText('Đăng nhập thành công')).toBeVisible();
   });
 
   test('TC_13 [Valid Boundary]: Kết hợp biên trên hợp lệ (Email đúng 54 ký tự, Mật khẩu đúng 64 ký tự)', async ({ page }) => {
@@ -113,6 +116,7 @@ test.describe('Kiểm thử chức năng Đăng nhập trên Mobile Web (16 Test
     await page.getByRole('button', { name: 'Đăng nhập' }).click();
     await expect(page.getByText('Email không được vượt quá 54 ký tự')).not.toBeVisible();
     await expect(page.getByText('Mật khẩu không được vượt quá 64 ký tự')).not.toBeVisible();
+    await expect(page.getByText('Đăng nhập thành công')).toBeVisible();
   });
 
   // -------------------------------------------------------------

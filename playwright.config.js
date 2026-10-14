@@ -53,7 +53,7 @@ export default defineConfig({
   /* Tự động chạy Vite dev server khi bắt đầu chạy test */
   webServer: {
     command: 'npx vite --port 5173',
-    url: 'http://localhost:5173',
+    url: 'http://localhost:5173/login',
     reuseExistingServer: true,
     timeout: 120000,
   },
