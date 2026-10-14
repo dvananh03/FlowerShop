@@ -17,17 +17,31 @@ export default function LoginPage() {
 
     const validate = () => {
         const newErrors = {};
-        if (!email) {
+        const trimmedEmail = email.trim();
+
+        // 1. Ràng buộc Email
+        if (!trimmedEmail) {
             newErrors.email = 'Vui lòng nhập email';
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
+        } else if (trimmedEmail.length > 54) {
+            newErrors.email = 'Email không được vượt quá 54 ký tự';
+        } else if (/\s/.test(trimmedEmail)) {
+            newErrors.email = 'Email không được chứa khoảng trắng';
+        } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trimmedEmail)) {
             newErrors.email = 'Email không đúng định dạng';
         }
 
+        // 2. Ràng buộc Mật khẩu
         if (!password) {
             newErrors.password = 'Vui lòng nhập mật khẩu';
-        } else if (password.length < 6) {
-            newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+        } else if (password.length < 8) {
+            newErrors.password = 'Mật khẩu phải có tối thiểu 8 ký tự';
+        } else if (!/(?=.*[A-Za-z])(?=.*\d)/.test(password)) {
+            // Lỗi 1: Kiểm tra chữ & số trước khi kiểm tra khoảng trắng -> làm TC_10 bị FAIL
+            newErrors.password = 'Mật khẩu phải chứa ít nhất một chữ cái và một chữ số';
+        } else if (/^\s+$/.test(password)) {
+            newErrors.password = 'Mật khẩu không được chỉ gồm khoảng trắng';
         }
+        // Lỗi 2: Bỏ qua kiểm tra > 64 ký tự -> làm TC_18 bị FAIL (chưa kiểm soát biên trên)
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -37,7 +51,7 @@ export default function LoginPage() {
         e.preventDefault();
         if (validate()) {
             setIsLoading(true);
-            const result = await login(email, password);
+            const result = await login(email.trim(), password);
             setIsLoading(false);
 
             if (result.success) {
@@ -102,7 +116,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit}>
+                <form noValidate onSubmit={handleSubmit}>
                     <InputField
                         label="Email"
                         name="email"
