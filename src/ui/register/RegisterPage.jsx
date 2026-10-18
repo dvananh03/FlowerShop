@@ -25,12 +25,29 @@ export default function RegisterPage() {
             error = 'Vui lòng nhập họ và tên';
         }
         if (name === 'email') {
-            if (!value) error = 'Vui lòng nhập email';
-            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Email không đúng định dạng';
+            const trimmed = (value || '').trim();
+            if (!trimmed) {
+                error = 'Vui lòng nhập email';
+            } else if (trimmed.length > 54) {
+                error = 'Email không được vượt quá 54 ký tự';
+            } else if (/\s/.test(trimmed)) {
+                error = 'Email không được chứa khoảng trắng';
+            } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trimmed)) {
+                error = 'Email không đúng định dạng';
+            }
         }
         if (name === 'password') {
-            if (!value) error = 'Vui lòng nhập mật khẩu';
-            else if (value.length < 6) error = 'Mật khẩu phải có ít nhất 6 ký tự';
+            if (!value) {
+                error = 'Vui lòng nhập mật khẩu';
+            } else if (value.length < 8) {
+                error = 'Mật khẩu phải có tối thiểu 8 ký tự';
+            } else if (value.length > 64) {
+                error = 'Mật khẩu không được vượt quá 64 ký tự';
+            } else if (/\s/.test(value)) {
+                error = 'Mật khẩu không được chứa khoảng trắng';
+            } else if (!/(?=.*[A-Za-z])(?=.*\d)/.test(value)) {
+                error = 'Mật khẩu phải chứa ít nhất một chữ cái và một chữ số';
+            }
         }
         if (name === 'confirmPassword') {
             if (!value) error = 'Vui lòng xác nhận mật khẩu';
@@ -219,6 +236,9 @@ export default function RegisterPage() {
                                 error={errors.confirmPassword}
                             />
                         </div>
+                        <p className="text-[12px] text-gray-500 mb-3 -mt-1">
+                            * Mật khẩu tối thiểu 8 ký tự, phải gồm cả chữ và số (ví dụ: <span className="font-semibold text-gray-700">Hoa12345</span>)
+                        </p>
 
                         <div className="mt-2 mb-6">
                             <label className="flex items-start text-sm text-gray-600 cursor-pointer group select-none">

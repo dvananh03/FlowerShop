@@ -30,21 +30,23 @@ export const AuthProvider = ({ children }) => {
             if (data.success) {
                 setUser(data);
                 localStorage.setItem('user', JSON.stringify(data));
-                return { success: true };
+                return { success: true, user: data };
             }
         } catch (error) {
             // Backend offline
         }
-        // Fallback cho demo
+        // Fallback cho demo & UI test
+        const isAdmin = email.toLowerCase().includes('admin');
         const mockUser = {
             _id: 'mock_' + Date.now(),
             name: email.split('@')[0],
             email: email,
-            role: 'customer'
+            role: isAdmin ? 'admin' : 'customer',
+            isAdmin: isAdmin
         };
         setUser(mockUser);
         localStorage.setItem('user', JSON.stringify(mockUser));
-        return { success: true };
+        return { success: true, user: mockUser };
     };
 
     const register = async (name, email, password) => {

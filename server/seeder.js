@@ -6,6 +6,7 @@ import Product from './models/Product.js';
 import Review from './models/Review.js';
 import Member from './models/Member.js';
 import Timeline from './models/Timeline.js';
+import User from './models/userModel.js';
 
 // 2. Import tất cả dữ liệu từ thư mục data
 import { products } from '../src/data/temp_products.js';
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
         await Review.deleteMany();
         await Member.deleteMany();
         await Timeline.deleteMany();
+        await User.deleteMany();
         console.log('--- 1. Đã dọn dẹp sạch kho dữ liệu cũ ---');
 
         // --- BƯỚC 2: NẠP DỮ LIỆU ---
@@ -43,6 +45,27 @@ mongoose.connect(process.env.MONGO_URI)
         // Nạp Lịch sử
         await Timeline.insertMany(timeline.map(({id, ...rest}) => rest));
         console.log(`--- 5. Đã nạp ${timeline.length} mốc lịch sử ⏳ ---`);
+
+        // Nạp Người dùng mẫu (Admin & Khách hàng)
+        await User.create([
+            {
+                name: 'Quản trị viên',
+                email: 'admin@gmail.com',
+                password: 'Admin123',
+                phone: '0987654321',
+                role: 'admin',
+                isAdmin: true
+            },
+            {
+                name: 'Khách hàng',
+                email: 'khachhang@gmail.com',
+                password: 'Khachhang123',
+                phone: '0912345678',
+                role: 'user',
+                isAdmin: false
+            }
+        ]);
+        console.log('--- 6. Đã nạp 2 tài khoản mẫu (admin@gmail.com / Admin123 & khachhang@gmail.com / Khachhang123) 👥 ---');
 
         console.log('====================================');
         console.log('DỰ ÁN ĐÃ ĐƯỢC NẠP DỮ LIỆU ĐẦY ĐỦ! 🚀');

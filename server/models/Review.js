@@ -3,12 +3,12 @@ import mongoose from 'mongoose';
 const reviewSchema = new mongoose.Schema({
     productId: {
         type: String, // Dùng String để khớp với ID sản phẩm hiện tại (nếu dùng UUID) hoặc ObjectId
-        required: true
+        required: false
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
     },
     name: {
         type: String,

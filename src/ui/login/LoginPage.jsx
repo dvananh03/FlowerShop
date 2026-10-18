@@ -52,19 +52,11 @@ export default function LoginPage() {
         if (validate()) {
             setIsLoading(true);
 
-            // Tự động giả lập đăng nhập thành công cho các ca test hợp lệ (không phụ thuộc database)
-            const mockUser = {
-                _id: 'mock_' + Date.now(),
-                name: email.trim().split('@')[0],
-                email: email.trim(),
-                role: 'customer'
-            };
-            localStorage.setItem('user', JSON.stringify(mockUser));
-
+            let result = null;
             try {
-                await login(email.trim(), password);
+                result = await login(email.trim(), password);
             } catch (err) {
-                // Bỏ qua lỗi kết nối backend
+                // Lỗi kết nối
             }
 
             setIsLoading(false);
@@ -76,7 +68,12 @@ export default function LoginPage() {
             });
 
             setTimeout(() => {
-                navigate('/');
+                const loggedUser = result?.user;
+                if (loggedUser?.isAdmin || loggedUser?.role === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/');
+                }
             }, 600);
         }
     };
